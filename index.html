@@ -7,7 +7,6 @@
     <title>Encoding Report</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Styling for the form */
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -35,7 +34,6 @@
             margin-bottom: 15px;
         }
     </style>
-    <!-- Import html2pdf.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 </head>
 
@@ -58,14 +56,10 @@
                 </select>
             </div>
 
-           
             <h2>Prescription Issues</h2>
-          
-
+            <div id="prescriptionIssuesContainer"></div>
             <button type="button" class="btn btn-primary mb-3" onclick="addPrescriptionIssue()">+ Prescription Issue</button>
 
-
-            
             <div class="form-group">
                 <label for="cancelledOrders">No. of Cancelled Orders:</label>
                 <input type="number" id="cancelledOrders" class="form-control">
@@ -97,55 +91,53 @@
             const div = document.createElement('div');
             div.classList.add('prescription-entry', 'mb-4');
             div.innerHTML = `
-
-
-
-            <div id="prescriptionIssuesContainer"></div>
-
-           
-                <label for="mrNo">Patient MRNo.:</label>
-                <input type="text" id="mrNo" class="form-control"><br>
-        
-            
-                <label>Prescription Issue:</label>
-                <input type="text" class="form-control prescriptionIssue" placeholder="Enter drug name and dose"><br>
-
-                <label>Physician:</label>
-                <input type="text" class="form-control physician" placeholder="Enter physician name"><br>
-
-                <label>Issue related:</label><br>
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input issueRelated" value="Code"> 
-                    <label class="form-check-label">Code</label>
+                <div class="form-group">
+                    <label for="mrNo">Patient MRNo.:</label>
+                    <input type="text" class="form-control" placeholder="Enter MRNo.">
                 </div>
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input issueRelated" value="Qty"> 
-                    <label class="form-check-label">Qty</label>
+                <div class="form-group">
+                    <label>Prescription Issue:</label>
+                    <input type="text" class="form-control prescriptionIssue" placeholder="Enter drug name and dose">
                 </div>
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input issueRelated" value="Dose"> 
-                    <label class="form-check-label">Dose</label>
+                <div class="form-group">
+                    <label>Physician:</label>
+                    <input type="text" class="form-control physician" placeholder="Enter physician name">
                 </div>
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input issueRelated" value="Both"> 
-                    <label class="form-check-label">Both</label>
-                </div><br><br>
-
-                <label>Solution:</label>
-                <select class="form-control solution">
-                    <option value="Changed code">Changed code</option>
-                    <option value="Changed Qty">Changed Qty</option>
-                    <option value="Changed Dose">Changed Dose</option>
-                    <option value="Both">Both</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select><br>
+                <div class="form-group">
+                    <label>Issue related:</label><br>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input issueRelated" value="Code"> 
+                        <label class="form-check-label">Code</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input issueRelated" value="Qty"> 
+                        <label class="form-check-label">Qty</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input issueRelated" value="Dose"> 
+                        <label class="form-check-label">Dose</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="checkbox" class="form-check-input issueRelated" value="Both"> 
+                        <label class="form-check-label">Both</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Solution:</label>
+                    <select class="form-control solution">
+                        <option value="Changed code">Changed code</option>
+                        <option value="Changed Qty">Changed Qty</option>
+                        <option value="Changed Dose">Changed Dose</option>
+                        <option value="Both">Both</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
             `;
             container.appendChild(div);
         }
 
         // Function to generate PDF
         function generatePDF() {
-            // Use html2pdf to capture the content in reportContent div
             const element = document.getElementById('reportContent');
             const options = {
                 margin: 1,
@@ -154,8 +146,6 @@
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
-
-            // Generate PDF
             html2pdf().set(options).from(element).save();
         }
     </script>
