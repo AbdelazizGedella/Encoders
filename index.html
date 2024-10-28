@@ -1,90 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Encoding Report</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            background-color: #1a1a1a;
-            color: #ffffff;
+        /* Styling for the form */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        .divider {
-            border-top: 1px solid #ffffff;
-            margin: 20px 0;
-        }
-        .hidden-section {
-            display: none;
-        }
+
         .header {
             background-color: #1538a4;
+            color: #fff;
             padding: 20px;
-            color: white;
-            text-align: center;
             border-radius: 8px;
-            margin-bottom: 20px;
+            text-align: center;
         }
-        .btn-custom {
-            background-color: #33a2ff;
-            color: white;
+
+        .btn-primary {
+            background-color: #1538a4;
+            color: #fff;
+            border: none;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
         }
     </style>
+    <!-- Import html2pdf.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 </head>
+
 <body>
-    <div class="container">
+    <div class="container" id="reportContent">
         <div class="header">
             <h1>Encoding Report</h1>
         </div>
 
         <form id="reportForm">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="date">Date:</label>
-                    <input type="text" class="form-control" id="date" readonly>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="shift">Shift:</label>
-                    <select id="shift" class="form-control">
-                        <option value="Day">Day</option>
-                        <option value="Night">Night</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="text" class="form-control" id="date" readonly>
+            </div>
+            <div class="form-group">
+                <label for="shift">Shift:</label>
+                <select id="shift" class="form-control">
+                    <option value="Day">Day</option>
+                    <option value="Night">Night</option>
+                </select>
             </div>
 
-            <div class="divider"></div>
-
+            <h2>Patient Information</h2>
             <div class="form-group">
                 <label for="mrNo">Patient MRNo.:</label>
-                <input type="text" id="mrNo" class="form-control mb-3">
+                <input type="text" id="mrNo" class="form-control">
             </div>
 
-            <div class="divider"></div>
-
-            <h4>Prescription Issues</h4>
-            <button type="button" class="btn btn-custom mb-3" onclick="addPrescriptionIssue()">+ Prescription Issue</button>
-
+            <h2>Prescription Issues</h2>
+            <button type="button" class="btn btn-primary mb-3" onclick="addPrescriptionIssue()">+ Prescription Issue</button>
             <div id="prescriptionIssuesContainer"></div>
-
-            <div class="divider"></div>
 
             <div class="form-group">
                 <label for="cancelledOrders">No. of Cancelled Orders:</label>
-                <input type="number" id="cancelledOrders" class="form-control mb-3">
+                <input type="number" id="cancelledOrders" class="form-control">
             </div>
-
             <div class="form-group">
                 <label for="notAvailableMedications">Not Available Qty Medications:</label>
-                <input type="text" id="notAvailableMedications" class="form-control mb-3">
+                <input type="text" id="notAvailableMedications" class="form-control">
             </div>
-
             <div class="form-group">
                 <label for="notAvailableConsumables">Not Available Qty Consumables:</label>
-                <input type="text" id="notAvailableConsumables" class="form-control mb-3">
+                <input type="text" id="notAvailableConsumables" class="form-control">
             </div>
-
-            <div class="divider"></div>
-
             <div class="form-group">
                 <label for="updates">Updates:</label>
                 <textarea id="updates" class="form-control" rows="3"></textarea>
@@ -94,23 +89,21 @@
         </form>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script>
+        // Set current date
         document.getElementById('date').value = new Date().toLocaleDateString();
 
+        // Function to add a new Prescription Issue section
         function addPrescriptionIssue() {
             const container = document.getElementById('prescriptionIssuesContainer');
-            
-            // Create a new Prescription Issue entry
-            const prescriptionEntry = document.createElement('div');
-            prescriptionEntry.classList.add('prescription-entry', 'mb-4', 'p-3', 'bg-dark', 'border', 'border-white', 'rounded');
+            const div = document.createElement('div');
+            div.classList.add('prescription-entry', 'mb-4');
+            div.innerHTML = `
+                <label>Prescription Issue:</label>
+                <input type="text" class="form-control prescriptionIssue" placeholder="Enter drug name and dose"><br>
 
-            prescriptionEntry.innerHTML = `
-                <label for="prescriptionIssue">Prescription Issue:</label>
-                <input type="text" class="form-control prescriptionIssue mb-2" placeholder="Enter drug name and dose">
-
-                <label for="physician">Physician:</label>
-                <input type="text" class="form-control physician mb-2" placeholder="Enter physician name">
+                <label>Physician:</label>
+                <input type="text" class="form-control physician" placeholder="Enter physician name"><br>
 
                 <label>Issue related:</label><br>
                 <div class="form-check form-check-inline">
@@ -131,58 +124,33 @@
                 </div><br><br>
 
                 <label>Solution:</label>
-                <select class="form-control solution mb-2">
+                <select class="form-control solution">
                     <option value="Changed code">Changed code</option>
                     <option value="Changed Qty">Changed Qty</option>
                     <option value="Changed Dose">Changed Dose</option>
                     <option value="Both">Both</option>
                     <option value="Cancelled">Cancelled</option>
-                </select>
+                </select><br>
             `;
-
-            // Append to the container
-            container.appendChild(prescriptionEntry);
+            container.appendChild(div);
         }
 
+        // Function to generate PDF
         function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            // Use html2pdf to capture the content in reportContent div
+            const element = document.getElementById('reportContent');
+            const options = {
+                margin: 1,
+                filename: 'encoding_report.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
 
-            const shift = document.getElementById('shift').value;
-            const mrNo = document.getElementById('mrNo').value;
-
-            doc.text("Encoding Report", 10, 10);
-            doc.text(`Date: ${new Date().toLocaleDateString()}`, 10, 20);
-            doc.text(`Shift: ${shift}`, 10, 30);
-            doc.text(`Patient MRNo.: ${mrNo}`, 10, 40);
-
-            let yOffset = 50;
-            document.querySelectorAll('.prescription-entry').forEach((entry, index) => {
-                const prescriptionIssue = entry.querySelector('.prescriptionIssue').value;
-                const physician = entry.querySelector('.physician').value;
-                const issueRelated = Array.from(entry.querySelectorAll('.issueRelated:checked'))
-                    .map(checkbox => checkbox.value).join(', ');
-                const solution = entry.querySelector('.solution').value;
-
-                doc.text(`Prescription Issue #${index + 1}: ${prescriptionIssue}`, 10, yOffset);
-                doc.text(`Physician: ${physician}`, 10, yOffset + 10);
-                doc.text(`Issue Related: ${issueRelated}`, 10, yOffset + 20);
-                doc.text(`Solution: ${solution}`, 10, yOffset + 30);
-                yOffset += 40;
-            });
-
-            const cancelledOrders = document.getElementById('cancelledOrders').value;
-            const notAvailableMedications = document.getElementById('notAvailableMedications').value;
-            const notAvailableConsumables = document.getElementById('notAvailableConsumables').value;
-            const updates = document.getElementById('updates').value;
-
-            doc.text(`No. of Cancelled Orders: ${cancelledOrders}`, 10, yOffset);
-            doc.text(`Not Available Qty Medications: ${notAvailableMedications}`, 10, yOffset + 10);
-            doc.text(`Not Available Qty Consumables: ${notAvailableConsumables}`, 10, yOffset + 20);
-            doc.text(`Updates: ${updates}`, 10, yOffset + 30);
-
-            doc.save('Encoding_Report.pdf');
+            // Generate PDF
+            html2pdf().set(options).from(element).save();
         }
     </script>
 </body>
+
 </html>
