@@ -57,13 +57,21 @@
                     <option value="Night">Night</option>
                 </select>
             </div>
-
+            <div class="mb-4">
+                <h6 class="text-uppercase">Solid</h6>
+                <!-- Solid divider -->
+                <hr class="solid">
+            </div>
             <h2>Prescription Issues</h2>
             <button type="button" class="btn btn-primary mb-3" onclick="addPrescriptionIssue()">+ Prescription Issue</button>
             
             <!-- Container for dynamic Prescription Issue entries -->
             <div id="prescriptionIssuesContainer"></div>
-            
+                        <div class="mb-4">
+                <h6 class="text-uppercase">Solid</h6>
+                <!-- Solid divider -->
+                <hr class="solid">
+            </div>
             <div class="form-group">
                 <label for="cancelledOrders">No. of Cancelled Orders:</label>
                 <input type="number" id="cancelledOrders" class="form-control">
@@ -80,7 +88,11 @@
                 <label for="updates">Updates:</label>
                 <textarea id="updates" class="form-control" rows="3"></textarea>
             </div>
-
+            <div class="mb-4">
+                <h6 class="text-uppercase">Solid</h6>
+                <!-- Solid divider -->
+                <hr class="solid">
+            </div>
             <button type="button" class="btn btn-primary" onclick="generatePDF()">Submit</button>
         </form>
     </div>
