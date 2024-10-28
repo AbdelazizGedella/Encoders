@@ -219,8 +219,8 @@ body {
             // Use html2pdf to capture the content in reportContent div
             const element = document.getElementById('reportContent');
             const options = {
-                margin: 1,
-                filename: 'encoding_report.pdf',
+                margin: 0,
+                filename: 'Encoding_Report.pdf',
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' }
