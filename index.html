@@ -275,67 +275,6 @@ body {
         }
 
 
-   // Function to add a new staff orientation
-        function orientation() {
-            const container = document.getElementById('prescriptionIssuesContainer');
-            const div = document.createElement('div');
-            div.classList.add('prescription-entry', 'mb-4');
-            div.innerHTML = `
-
-              <div class="mb-4">
-                <!-- Solid divider -->
-                        <hr data-content="AND" class="hr-text">
-
-            </div>
-            
-                <label for="mrNo">Patient MRNo.:</label>
-                <input type="text" class="form-control" placeholder="Enter MRNo."><br>
-
-                <label>Prescription Issue:</label>
-                <input type="text" class="form-control prescriptionIssue" placeholder="Enter drug name and dose"><br>
-
-                <label>Physician:</label>
-                <input type="text" class="form-control physician" placeholder="Enter physician name"><br>
-
-                <label>Issue related:</label><br>
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input issueRelated" value="Code"> 
-                    <label class="form-check-label">Code</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input issueRelated" value="Qty"> 
-                    <label class="form-check-label">Qty</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input issueRelated" value="Dose"> 
-                    <label class="form-check-label">Dose</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input issueRelated" value="Both"> 
-                    <label class="form-check-label">Both</label>
-                </div><br><br>
-
-      <div class="form-group">
-                <label for="issues">Issues:</label>
-                <textarea id="issues" class="form-control" rows="3"></textarea>
-            </div>
-
-                <label>Solution:</label>
-                <select class="form-control solution">
-                    <option value="Changed code">Changed code</option>
-                    <option value="Changed Qty">Changed Qty</option>
-                    <option value="Changed Dose">Changed Dose</option>
-                    <option value="Both">Both</option>
-                      <option value="Both">Still not Fixed</option>
-                    <option value="Cancelled">Cancelled</option>
-                </select>
-
-   
-               
-                <br>
-            `;
-            container.appendChild(div);
-        }
 
         
         
