@@ -4,42 +4,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nursing Documentation Master</title>
+    <title>Multilingual Nursing Documentation</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #recordings {
-            margin-top: 20px;
-        }
-        .entry {
-            margin-bottom: 10px;
-            padding: 5px;
-            border: 1px solid #ddd;
-        }
-        #generated-documentation {
-            margin-top: 20px;
-            white-space: pre-wrap;
-            border: 1px solid #000;
-            padding: 10px;
-        }
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #recordings { margin-top: 20px; }
+        .entry { margin-bottom: 10px; padding: 5px; border: 1px solid #ddd; }
+        #generated-documentation { margin-top: 20px; border: 1px solid #000; padding: 10px; white-space: pre-wrap; }
     </style>
 </head>
 <body>
-    <h1>Nursing Documentation Master</h1>
+    <h1>Multilingual Nursing Documentation</h1>
     <button id="start-btn">Start Recording</button>
     <button id="stop-btn" disabled>Stop Recording</button>
     <div id="recordings"></div>
-    <button id="generate-btn" disabled>Generate Handover Documentation</button>
+    <button id="generate-btn" disabled>Generate Documentation</button>
     <button id="copy-btn" disabled>Copy Documentation</button>
     <div id="generated-documentation"></div>
 
     <script>
         const startBtn = document.getElementById('start-btn');
         const stopBtn = document.getElementById('stop-btn');
-        const generateBtn = document.getElementById('generate-btn');
-        const copyBtn = document.getElementById('copy-btn');
         const recordingsDiv = document.getElementById('recordings');
         const generatedDocumentationDiv = document.getElementById('generated-documentation');
         let recognition;
@@ -50,7 +34,7 @@
             recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = false;
-            recognition.lang = 'ar-SA'; // Adjust to 'en-US' or other language codes as needed
+            recognition.lang = 'en-US'; // Change this part if you need to test other setups
 
             recognition.onresult = (event) => {
                 const timestamp = new Date().toLocaleString();
@@ -62,7 +46,7 @@
                 entryDiv.textContent = `${timestamp}: ${transcript}`;
                 recordingsDiv.appendChild(entryDiv);
 
-                generateBtn.disabled = false;
+                document.getElementById('generate-btn').disabled = false;
             };
 
             recognition.onend = () => {
@@ -80,16 +64,16 @@
                 recognition.stop();
             });
 
-            generateBtn.addEventListener('click', () => {
+            document.getElementById('generate-btn').addEventListener('click', () => {
                 let formattedText = "Nursing Handover Documentation:\n\n";
                 entries.forEach((entry, index) => {
                     formattedText += `Entry ${index + 1} - ${entry.timestamp}:\n${entry.transcript}\n\n`;
                 });
                 generatedDocumentationDiv.textContent = formattedText;
-                copyBtn.disabled = false;
+                document.getElementById('copy-btn').disabled = false;
             });
 
-            copyBtn.addEventListener('click', () => {
+            document.getElementById('copy-btn').addEventListener('click', () => {
                 navigator.clipboard.writeText(generatedDocumentationDiv.textContent).then(() => {
                     alert('Documentation copied to clipboard!');
                 });
