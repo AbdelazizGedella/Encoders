@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentation Master 3</title>
+    <title>Nursing Documentation Master</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,39 +14,55 @@
             margin-top: 20px;
         }
         .entry {
-            margin-bottom: 15px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+        #generated-documentation {
+            margin-top: 20px;
+            white-space: pre-wrap;
+            border: 1px solid #000;
+            padding: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Documentation Master 4</h1>
+    <h1>Nursing Documentation Master</h1>
     <button id="start-btn">Start Recording</button>
     <button id="stop-btn" disabled>Stop Recording</button>
     <div id="recordings"></div>
+    <button id="generate-btn" disabled>Generate Handover Documentation</button>
+    <button id="copy-btn" disabled>Copy Documentation</button>
+    <div id="generated-documentation"></div>
 
     <script>
         const startBtn = document.getElementById('start-btn');
         const stopBtn = document.getElementById('stop-btn');
+        const generateBtn = document.getElementById('generate-btn');
+        const copyBtn = document.getElementById('copy-btn');
         const recordingsDiv = document.getElementById('recordings');
+        const generatedDocumentationDiv = document.getElementById('generated-documentation');
         let recognition;
+        let entries = [];
 
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = false;
+            recognition.lang = 'ar-SA'; // Adjust to 'en-US' or other language codes as needed
 
-            // Attempt to use a language that can detect multiple languages if possible.
-            recognition.lang = 'en-US*ar-EG'; // Fallback to English but adjust as needed
             recognition.onresult = (event) => {
                 const timestamp = new Date().toLocaleString();
-                const transcript = event.results[event.results.length - 1][0].transcript;
-                const entry = document.createElement('div');
-                entry.classList.add('entry');
-                entry.innerHTML = `<strong>${timestamp}:</strong> ${transcript}`;
-                recordingsDiv.appendChild(entry);
+                const transcript = event.results[event.results.length - 1][0].transcript.trim();
+                entries.push({ timestamp, transcript });
+
+                const entryDiv = document.createElement('div');
+                entryDiv.classList.add('entry');
+                entryDiv.textContent = `${timestamp}: ${transcript}`;
+                recordingsDiv.appendChild(entryDiv);
+
+                generateBtn.disabled = false;
             };
 
             recognition.onend = () => {
@@ -62,6 +78,21 @@
 
             stopBtn.addEventListener('click', () => {
                 recognition.stop();
+            });
+
+            generateBtn.addEventListener('click', () => {
+                let formattedText = "Nursing Handover Documentation:\n\n";
+                entries.forEach((entry, index) => {
+                    formattedText += `Entry ${index + 1} - ${entry.timestamp}:\n${entry.transcript}\n\n`;
+                });
+                generatedDocumentationDiv.textContent = formattedText;
+                copyBtn.disabled = false;
+            });
+
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(generatedDocumentationDiv.textContent).then(() => {
+                    alert('Documentation copied to clipboard!');
+                });
             });
         } else {
             alert('Sorry, your browser does not support speech recognition.');
