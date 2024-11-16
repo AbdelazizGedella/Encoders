@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentation Master</title>
+    <title>Documentation Master 3</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,7 +40,7 @@
 
             // Attempt to use a language that can detect multiple languages if possible.
             recognition.lang = 'en-US'; // Fallback to English but adjust as needed
-
+recognition.lang = 'ar-EG';
             recognition.onresult = (event) => {
                 const timestamp = new Date().toLocaleString();
                 const transcript = event.results[event.results.length - 1][0].transcript;
