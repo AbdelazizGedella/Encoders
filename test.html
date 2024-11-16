@@ -2,84 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible="IE=edge">
+    <meta http-equiv="X-UA-Compatible=IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multilingual Nursing Documentation</title>
+    <title>Speech-to-Text Integration</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         #recordings { margin-top: 20px; }
-        .entry { margin-bottom: 10px; padding: 5px; border: 1px solid #ddd; }
-        #generated-documentation { margin-top: 20px; border: 1px solid #000; padding: 10px; white-space: pre-wrap; }
     </style>
 </head>
 <body>
-    <h1>Multilingual Nursing Documentation</h1>
+    <h1>Speech-to-Text Integration</h1>
     <button id="start-btn">Start Recording</button>
     <button id="stop-btn" disabled>Stop Recording</button>
     <div id="recordings"></div>
-    <button id="generate-btn" disabled>Generate Documentation</button>
-    <button id="copy-btn" disabled>Copy Documentation</button>
-    <div id="generated-documentation"></div>
 
     <script>
+        let mediaRecorder;
         const startBtn = document.getElementById('start-btn');
         const stopBtn = document.getElementById('stop-btn');
         const recordingsDiv = document.getElementById('recordings');
-        const generatedDocumentationDiv = document.getElementById('generated-documentation');
-        let recognition;
-        let entries = [];
 
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = false;
-            recognition.lang = 'en-US'; // Change this part if you need to test other setups
+        startBtn.addEventListener('click', async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
 
-            recognition.onresult = (event) => {
-                const timestamp = new Date().toLocaleString();
-                const transcript = event.results[event.results.length - 1][0].transcript.trim();
-                entries.push({ timestamp, transcript });
+            mediaRecorder.ondataavailable = async (event) => {
+                const audioBlob = event.data;
+                const formData = new FormData();
+                formData.append('audio', audioBlob);
 
-                const entryDiv = document.createElement('div');
-                entryDiv.classList.add('entry');
-                entryDiv.textContent = `${timestamp}: ${transcript}`;
-                recordingsDiv.appendChild(entryDiv);
-
-                document.getElementById('generate-btn').disabled = false;
+                // Send the audio blob to the backend server
+                const response = await fetch('/transcribe', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+                displayTranscription(result.transcription);
             };
 
-            recognition.onend = () => {
+            mediaRecorder.onstop = () => {
                 startBtn.disabled = false;
                 stopBtn.disabled = true;
             };
+        });
 
-            startBtn.addEventListener('click', () => {
-                recognition.start();
-                startBtn.disabled = true;
-                stopBtn.disabled = false;
-            });
+        stopBtn.addEventListener('click', () => {
+            mediaRecorder.stop();
+        });
 
-            stopBtn.addEventListener('click', () => {
-                recognition.stop();
-            });
-
-            document.getElementById('generate-btn').addEventListener('click', () => {
-                let formattedText = "Nursing Handover Documentation:\n\n";
-                entries.forEach((entry, index) => {
-                    formattedText += `Entry ${index + 1} - ${entry.timestamp}:\n${entry.transcript}\n\n`;
-                });
-                generatedDocumentationDiv.textContent = formattedText;
-                document.getElementById('copy-btn').disabled = false;
-            });
-
-            document.getElementById('copy-btn').addEventListener('click', () => {
-                navigator.clipboard.writeText(generatedDocumentationDiv.textContent).then(() => {
-                    alert('Documentation copied to clipboard!');
-                });
-            });
-        } else {
-            alert('Sorry, your browser does not support speech recognition.');
+        function displayTranscription(text) {
+            const transcriptionDiv = document.createElement('div');
+            transcriptionDiv.textContent = `Transcription: ${text}`;
+            recordingsDiv.appendChild(transcriptionDiv);
         }
     </script>
 </body>
