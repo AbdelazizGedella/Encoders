@@ -21,7 +21,7 @@
     </style>
 </head>
 <body>
-    <h1>Documentation Master 3</h1>
+    <h1>Documentation Master 4</h1>
     <button id="start-btn">Start Recording</button>
     <button id="stop-btn" disabled>Stop Recording</button>
     <div id="recordings"></div>
@@ -39,8 +39,7 @@
             recognition.interimResults = false;
 
             // Attempt to use a language that can detect multiple languages if possible.
-            recognition.lang = 'en-US'; // Fallback to English but adjust as needed
-recognition.lang = 'ar-EG';
+            recognition.lang = 'en-US*ar-EG'; // Fallback to English but adjust as needed
             recognition.onresult = (event) => {
                 const timestamp = new Date().toLocaleString();
                 const transcript = event.results[event.results.length - 1][0].transcript;
